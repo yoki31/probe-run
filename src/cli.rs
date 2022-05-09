@@ -27,6 +27,10 @@ pub(crate) struct Opts {
     #[structopt(long, required_unless_one(&["list-chips", "list-probes", "version"]), env = "PROBE_RUN_CHIP")]
     chip: Option<String>,
 
+    /// Path to chip description file, in YAML format.
+    #[structopt(long)]
+    pub(crate) chip_description_path: Option<PathBuf>,
+
     /// The probe to use (eg. `VID:PID`, `VID:PID:Serial`, or just `Serial`).
     #[structopt(long, env = "PROBE_RUN_PROBE")]
     pub(crate) probe: Option<String>,
@@ -71,6 +75,9 @@ pub(crate) struct Opts {
     #[structopt(long)]
     pub(crate) measure_stack: bool,
 
+    #[structopt(long)]
+    pub(crate) json: bool,
+
     /// Arguments passed after the ELF file path are discarded
     #[structopt(name = "REST")]
     _rest: Vec<String>,
@@ -80,7 +87,7 @@ pub(crate) fn handle_arguments() -> anyhow::Result<i32> {
     let opts: Opts = Opts::from_args();
     let verbose = opts.verbose;
 
-    defmt_decoder::log::init_logger(verbose >= 1, move |metadata| {
+    defmt_decoder::log::init_logger(verbose >= 1, opts.json, move |metadata| {
         if defmt_decoder::log::is_defmt_frame(metadata) {
             true // We want to display *all* defmt frames.
         } else {
@@ -88,12 +95,10 @@ pub(crate) fn handle_arguments() -> anyhow::Result<i32> {
             //   * 0: log everything from probe-run, with level "info" or higher
             //   * 1: log everything from probe-run
             //   * 2 or more: log everything
-            if verbose >= 2 {
-                true
-            } else if verbose >= 1 {
-                metadata.target().starts_with("probe_run")
-            } else {
-                metadata.target().starts_with("probe_run") && metadata.level() <= Level::Info
+            match verbose {
+                0 => metadata.target().starts_with("probe_run") && metadata.level() <= Level::Info,
+                1 => metadata.target().starts_with("probe_run"),
+                _ => true,
             }
         }
     });

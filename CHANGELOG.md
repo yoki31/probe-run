@@ -6,9 +6,61 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
-- [#285]: Update `probe-rs` and `probe-rs-rtt` to `0.12`
+- [#321] CI: Add changelog-enforcer
+- [#320] Disable terminal colorization if `TERM=dumb` is set
+- [#319] Warn on target chip mismatch
+- [#317] Clarify "can't determine stack overflow" error message
+- [#314] Clarify documentation in README
+- [#293] Update snapshot tests to new TRACE output
 
+[#321]: https://github.com/knurling-rs/probe-run/pull/321
+[#320]: https://github.com/knurling-rs/probe-run/pull/320
+[#319]: https://github.com/knurling-rs/probe-run/pull/319
+[#317]: https://github.com/knurling-rs/probe-run/pull/317
+[#314]: https://github.com/knurling-rs/probe-run/pull/314
+[#293]: https://github.com/knurling-rs/probe-run/pull/293
+
+## [v0.3.3] - 2022-03-14
+
+### Fixed
+
+- [#311] fixed "probe-run does not work with some programs that have less than 10 KiB of stack space _unless_ `--measure-stack` is available"
+
+## [v0.3.2] - 2022-03-10 - YANKED
+
+- [#303] Don't bail, but only warn if using `--no-flash` with `defmt`
+- [#302] Make stack painting fast again! 🇪🇺
+- [#301] Add way to pass chip description file
+- [#300] Simplify verbose matching
+- [#299] Fix and refactor `fn extract_stack_info`
+- [#296] turn some `println!` into `writeln!`
+- [#295] probe-run json output
+- [#294] Update `Cargo.lock`
+
+[#303]: https://github.com/knurling-rs/probe-run/pull/303
+[#302]: https://github.com/knurling-rs/probe-run/pull/302
+[#301]: https://github.com/knurling-rs/probe-run/pull/301
+[#300]: https://github.com/knurling-rs/probe-run/pull/300
+[#299]: https://github.com/knurling-rs/probe-run/pull/299
+[#296]: https://github.com/knurling-rs/probe-run/pull/296
+[#295]: https://github.com/knurling-rs/probe-run/pull/295
+[#294]: https://github.com/knurling-rs/probe-run/pull/294
+
+# [v0.3.1] - 2021-11-26
+
+- [#287]: unwind: skip FDEs with initial address of 0
+- [#286]: Update dependencies
+- [#285]: Update `probe-rs` and `probe-rs-rtt` to `0.12`
+- [#282]: Include program counter value in backtrace when -v is passed
+- [#281]: Report flashing size using probe-rs's FlashProgress system
+- [#280]: Turn symbol demangling back on
+
+[#287]: https://github.com/knurling-rs/probe-run/pull/287
+[#286]: https://github.com/knurling-rs/probe-run/pull/286
 [#285]: https://github.com/knurling-rs/probe-run/pull/285
+[#282]: https://github.com/knurling-rs/probe-run/pull/282
+[#281]: https://github.com/knurling-rs/probe-run/pull/281
+[#280]: https://github.com/knurling-rs/probe-run/pull/280
 
 ## [v0.3.0] - 2021-11-09
 
@@ -339,7 +391,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Initial release
 
-[Unreleased]: https://github.com/knurling-rs/probe-run/compare/v0.3.0...main
+[Unreleased]: https://github.com/knurling-rs/probe-run/compare/v0.3.3...main
+[v0.3.3]: https://github.com/knurling-rs/probe-run/compare/v0.3.2...v0.3.3
+[v0.3.2]: https://github.com/knurling-rs/probe-run/compare/v0.3.1...v0.3.2
+[v0.3.1]: https://github.com/knurling-rs/probe-run/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/knurling-rs/probe-run/compare/v0.2.5...v0.3.0
 [v0.2.4]: https://github.com/knurling-rs/probe-run/compare/v0.2.4...v0.2.5
 [v0.2.3]: https://github.com/knurling-rs/probe-run/compare/v0.2.3...v0.2.4

@@ -65,12 +65,11 @@ pub(crate) fn print(
 
     // `0` disables the limit and we want to show _all_ frames
     if settings.backtrace_limit == 0 {
-        let frames_number = &frames.len();
-        settings.backtrace_limit = *frames_number as u32;
+        settings.backtrace_limit = frames.len() as u32;
     }
 
     if print_backtrace && settings.backtrace_limit > 0 {
-        pp::backtrace(&frames, settings);
+        pp::backtrace(&frames, settings)?;
 
         if unwind.corrupted {
             log::warn!("call stack was corrupted; unwinding could not be completed");

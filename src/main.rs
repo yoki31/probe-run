@@ -37,6 +37,9 @@ use crate::{backtrace::Outcome, canary::Canary, elf::Elf, target_info::TargetInf
 const TIMEOUT: Duration = Duration::from_secs(1);
 
 fn main() -> anyhow::Result<()> {
+    configure_terminal_colorization();
+
+    #[allow(clippy::redundant_closure)]
     cli::handle_arguments().map(|code| process::exit(code))
 }
 
@@ -49,8 +52,11 @@ fn run_target_program(elf_path: &Path, chip_name: &str, opts: &cli::Opts) -> any
     }
 
     let elf_bytes = fs::read(elf_path)?;
-    let elf = &Elf::parse(&elf_bytes)?;
+    let elf = &Elf::parse(&elf_bytes, elf_path)?;
 
+    if let Some(cdp) = &opts.chip_description_path {
+        probe_rs::config::add_target_from_yaml(Path::new(cdp))?;
+    }
     let target_info = TargetInfo::new(chip_name, elf)?;
 
     let probe = probe::open(opts)?;
@@ -139,7 +145,7 @@ fn run_target_program(elf_path: &Path, chip_name: &str, opts: &cli::Opts) -> any
     let halted_due_to_signal =
         extract_and_print_logs(elf, &mut core, &memory_map, opts, current_dir)?;
 
-    print_separator();
+    print_separator()?;
 
     let canary_touched = canary
         .map(|canary| canary.touched(&mut core, elf))
@@ -252,8 +258,8 @@ fn extract_and_print_logs(
         .map_or(false, |channel| channel.name() == Some("defmt"));
 
     if use_defmt && opts.no_flash {
-        bail!(
-            "attempted to use `--no-flash` and `defmt` logging -- this combination is not allowed. Remove the `--no-flash` flag"
+        log::warn!(
+            "You are using `--no-flash` and `defmt` logging -- this combination can lead to malformed defmt data!"
         );
     } else if use_defmt && elf.defmt_table.is_none() {
         bail!("\"defmt\" RTT channel is in use, but the firmware binary contains no defmt data");
@@ -267,7 +273,7 @@ fn extract_and_print_logs(
         None
     };
 
-    print_separator();
+    print_separator()?;
 
     let stdout = io::stdout();
     let mut stdout = stdout.lock();
@@ -425,6 +431,15 @@ fn setup_logging_channel(
 }
 
 /// Print a line to separate different execution stages.
-fn print_separator() {
-    println!("{}", "─".repeat(80).dimmed());
+fn print_separator() -> io::Result<()> {
+    writeln!(io::stderr(), "{}", "─".repeat(80).dimmed())
+}
+
+fn configure_terminal_colorization() {
+    // ! This should be detected by `colored`, but currently is not.
+    // See https://github.com/mackwic/colored/issues/108 and https://github.com/knurling-rs/probe-run/pull/318.
+
+    if let Ok("dumb") = env::var("TERM").as_deref() {
+        colored::control::set_override(false)
+    }
 }

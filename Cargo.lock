@@ -4,14 +4,14 @@ version = 3
 
 [[package]]
 name = "addr2line"
-version = "0.15.2"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7a2e47a1fbe209ee101dd6d61285226744c6c8d3c21c8dc878ba6cb9f467f3a"
+checksum = "b9ecd88a8c8378ca913a680cd98f0f13ac67383d35993f86c90a70e3f137816b"
 dependencies = [
  "cpp_demangle",
  "fallible-iterator",
- "gimli 0.24.0",
- "object 0.24.0",
+ "gimli",
+ "object",
  "rustc-demangle",
 ]
 
@@ -125,8 +125,10 @@ version = "0.4.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "670ad68c9088c2a963aaa298cb369688cf3f9465ce5e2d4ca10e6e0098a1ce73"
 dependencies = [
+ "libc",
  "num-integer",
  "num-traits",
+ "winapi",
 ]
 
 [[package]]
@@ -198,29 +200,40 @@ dependencies = [
 
 [[package]]
 name = "defmt-decoder"
-version = "0.3.0"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "326d55129bb42c2459efc5c4c890e772bb1c0ae219db9bab379765643ebc39d9"
+checksum = "f619a4bf5d95e044c1746bafd0552cd1de7b041dc361d506cfa6d9831f47c8b6"
 dependencies = [
  "anyhow",
  "byteorder",
  "chrono",
  "colored",
+ "defmt-json-schema",
  "defmt-parser",
  "difference",
- "gimli 0.24.0",
+ "gimli",
  "log",
- "object 0.25.3",
+ "object",
  "ryu",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "defmt-parser"
-version = "0.3.0"
+name = "defmt-json-schema"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d1ce010e1a51aef925c98f12ed81a4e0e96ce0185a87c33f1b3b9c8f20749c7"
+checksum = "96b04d228e57a61cf385d86bc8980bb41b47c6fc0eace90592668df97b2dad6a"
+dependencies = [
+ "log",
+ "serde",
+]
+
+[[package]]
+name = "defmt-parser"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0db23d29972d99baa3de2ee2ae3f104c10564a6d05a346eb3f4c4f2c0525a06e"
 
 [[package]]
 name = "diff"
@@ -310,16 +323,6 @@ dependencies = [
  "cfg-if",
  "libc",
  "wasi",
-]
-
-[[package]]
-name = "gimli"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e4075386626662786ddb0ec9081e7c7eeb1ba31951f447ca780ef9f5d568189"
-dependencies = [
- "fallible-iterator",
- "stable_deref_trait",
 ]
 
 [[package]]
@@ -502,6 +505,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "51b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710"
 dependencies = [
  "cfg-if",
+ "serde",
 ]
 
 [[package]]
@@ -563,28 +567,11 @@ dependencies = [
 
 [[package]]
 name = "object"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a5b3dd1c072ee7963717671d1ca129f1048fda25edea6b752bfc71ac8854170"
-dependencies = [
- "flate2",
-]
-
-[[package]]
-name = "object"
-version = "0.25.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a38f2be3697a57b4060074ff41b44c16870d916ad7877c17696e063257482bc7"
-dependencies = [
- "memchr",
-]
-
-[[package]]
-name = "object"
 version = "0.27.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67ac1d3f9a1d3616fd9a60c8d74296f22406a238b6a72f5cc1e6f314df4ffbf9"
 dependencies = [
+ "flate2",
  "memchr",
 ]
 
@@ -596,9 +583,9 @@ checksum = "692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56"
 
 [[package]]
 name = "os_pipe"
-version = "0.9.2"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb233f06c2307e1f5ce2ecad9f8121cffbbee2c95428f44ea85222e460d0d213"
+checksum = "0e3492ebca331b895fe23ed427dce2013d9b2e00c45964f12040b0db38b8ab27"
 dependencies = [
  "libc",
  "winapi",
@@ -668,14 +655,14 @@ dependencies = [
  "bitfield",
  "bitvec",
  "enum-primitive-derive",
- "gimli 0.26.1",
+ "gimli",
  "hidapi",
  "ihex",
  "jaylink",
  "jep106",
  "log",
  "num-traits",
- "object 0.27.1",
+ "object",
  "once_cell",
  "probe-rs-target",
  "rusb",
@@ -713,19 +700,19 @@ dependencies = [
 
 [[package]]
 name = "probe-run"
-version = "0.3.0"
+version = "0.3.3"
 dependencies = [
  "addr2line",
  "anyhow",
  "colored",
  "defmt-decoder",
  "dirs",
- "gimli 0.24.0",
+ "gimli",
  "git-version",
  "insta",
  "log",
  "nix",
- "object 0.24.0",
+ "object",
  "os_pipe",
  "pretty_assertions",
  "probe-rs",
